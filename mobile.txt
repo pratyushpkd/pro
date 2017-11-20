@@ -1,0 +1,118 @@
+ package com.capgemini.mobpur.pi;
+
+import java.util.Scanner;
+
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
+
+import com.capgemini.mobpur.bean.PurchaseDetailsBean;
+import com.capgemini.mobpur.exception.MobilePurchaseException;
+import com.capgemini.mobpur.service.ServiceMobileImpl;
+import com.capgemini.mobpur.service.ServicePurchaseImpl;
+
+public class MobilePurchaseMain {
+ private static Logger logger = Logger.getRootLogger();
+	public static void main(String[] args) {
+		PropertyConfigurator.configure("resources/log4j.properties");
+		boolean isInProcess = true;
+		boolean isValid = false;
+		byte choice = 0;
+		
+		String cname = null;
+		String mailId = null;
+		String phoneNo = null;
+		int mobileId = 0;
+		
+		ServiceMobileImpl serviceMobile = new ServiceMobileImpl();
+		ServicePurchaseImpl servicePurchaseMobile = new ServicePurchaseImpl();
+		PurchaseDetailsBean purchaseDetailsBean = null;
+		
+		Scanner scInput = new Scanner(System.in);
+		while(isInProcess){
+			System.out.println("1. Insert Mobile Purchase.");
+			System.out.println("2. View all mobiles.");
+			System.out.println("3. Delete mobile details.");
+			System.out.println("4. Search mobiles for a range.");
+			System.out.println("0. Exit.");
+			
+			choice = Byte.parseByte(scInput.nextLine());
+			switch(choice){
+case 1:
+				while(!isValid){
+					try{
+						System.out.println("Enter the customer name:");
+						cname = scInput.nextLine();
+						
+						isValid = servicePurchaseMobile.isValidCName(cname);
+					}catch(MobilePurchaseException mpe){
+						logger.error("Invalid name: "+cname);
+						isValid = false;
+						
+					}
+				}
+					
+				isValid = false;
+				
+				while(!isValid){
+				try{
+					System.out.println("Enter mail id:");
+					mailId = scInput.nextLine();
+					
+					isValid = servicePurchaseMobile.isValidMail(mailId);
+				}catch(MobilePurchaseException mpe){
+					logger.error("Invalid mail id: "+mailId);
+					isValid = false;
+					
+				}
+			}
+				
+			
+			isValid = false;
+			
+			while(!isValid){
+			try{
+				System.out.println("Enter phone no:");
+				phoneNo = scInput.nextLine();
+				
+				isValid = servicePurchaseMobile.isValidPhoneNo(phoneNo);
+			}catch(MobilePurchaseException mpe){
+				logger.error("Invalid phone no.: "+phoneNo);
+				isValid = false;
+				
+			}
+		}
+		
+		
+		isValid = false;
+		
+		while(!isValid){
+		try{
+			System.out.println("Enter mobile id:");
+			mobileId = scInput.nextInt();
+			
+			isValid = serviceMobile.isValidMobileId(mobileId);
+		}catch(MobilePurchaseException mpe){
+			logger.error("Invalid mobile id: "+mobileId);
+			isValid = false;
+			
+		}
+	}
+	purchaseDetailsBean = new PurchaseDetailsBean(cname,mailId,phoneNo,mobileId);
+	try{
+		servicePurchaseMobile.insertPurchaseDetails(purchaseDetailsBean);
+	}catch(MobilePurchaseException e){
+		logger.error(e.getMessage());
+	}
+	break;	
+				
+case 2:
+				
+			case 3:
+				
+				
+				
+			case 4:
+				
+				
+
+}}}}
